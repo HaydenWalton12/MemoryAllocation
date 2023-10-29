@@ -19,22 +19,29 @@ Tracker::Tracker()
 Tracker::~Tracker()
 {
 }
-void* Tracker::operator new(size_t requested)
+void* Tracker::operator new(size_t size)
 {
-	 p1 = malloc(4 * sizeof(int));  // allocates enough for an array of 4 int
+	//For Reference
+	std::cout << "Class New Operator Overloading" << std::endl;
 
-	return nullptr;
+	//Store Requested Bytes
+	void* p = malloc(size);
+	return p;
 }
+
 void Tracker::operator delete(void* pMem)
 {
+	std::cout << "Class Delete Operator Overloading" << std::endl;
+	free(pMem);
 }
+
 //Header / memory block forms a linked list, allowing us to rtr
 struct memory_block 
 {
 	Tracker* p_tracker;
 	int block_size;
 	//Check Value
-	int is_allocated;
+	bool is_allocated;
 };
 
 struct footer
@@ -57,11 +64,11 @@ void* operator new (size_t requested)
 	
 	//Assign block to this struct, allows us to manage block
 	memory_block* heap_segment = (memory_block*)block;
-	heap_segment->block_size = total;
 	heap_segment->p_tracker = main_tracker;
-
+	heap_segment->block_size = total;
+	heap_segment->is_allocated = true;
 	//Create memory address location for fotter, creates padding between blocks of heap.
-	void* p_footer = block + sizeof(memory_block) + total;
+	void* p_footer = block + sizeof(memory_block) + requested;
 
 	footer* heap_footer = (footer*)p_footer;
 	heap_footer->padding = 1;
@@ -82,7 +89,7 @@ void operator delete (void* pMem)
 
 int main()
 {
-	
+	main_tracker = new Tracker();
 	int* num = new int(5);
 	delete(num);
 	return 0;
