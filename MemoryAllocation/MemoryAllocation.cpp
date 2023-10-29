@@ -6,6 +6,8 @@ public:
 	Tracker();
 	~Tracker();
 
+	void heap_walk();
+
 	void* operator new(size_t requested);
 	void operator delete (void* pMem);
 private:
@@ -41,7 +43,11 @@ struct memory_block
 	Tracker* p_tracker;
 	int block_size;
 	//Check Value
-	bool is_allocated;
+	int check_value;
+	
+
+	memory_block* next;
+	memory_block* previous;
 };
 
 struct footer
@@ -49,10 +55,12 @@ struct footer
 	char padding;
 };
 
+
 Tracker* main_tracker;
 //Global New/Delete Overload Operators
 void* operator new (size_t requested)
 {
+	
 	//For Reference
 	std::cout << "New Operator Overloading" << std::endl;
 	
@@ -66,12 +74,16 @@ void* operator new (size_t requested)
 	memory_block* heap_segment = (memory_block*)block;
 	heap_segment->p_tracker = main_tracker;
 	heap_segment->block_size = total;
-	heap_segment->is_allocated = true;
+	heap_segment->check_value = 0xDEADC0DE;
 	//Create memory address location for fotter, creates padding between blocks of heap.
 	void* p_footer = block + sizeof(memory_block) + requested;
 
 	footer* heap_footer = (footer*)p_footer;
 	heap_footer->padding = 1;
+	
+	heap_segment->next = nullptr;
+	heap_segment->previous = nullptr;
+
 	void* data_segment = block + sizeof(memory_block);
 	return data_segment;
 
@@ -90,8 +102,10 @@ void operator delete (void* pMem)
 int main()
 {
 	main_tracker = new Tracker();
-	int* num = new int(5);
-	delete(num);
+	int* num1 = new int(5);
+
+	int* num2 = new int(5);
+	delete(num1);
 	return 0;
 
 	
