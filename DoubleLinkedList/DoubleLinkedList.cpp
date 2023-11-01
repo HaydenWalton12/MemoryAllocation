@@ -37,6 +37,40 @@ Node* insert_front(struct Node** current_head, int new_data)
 	return new_head;
 }
 
+//Inserts new node at the end of linked list
+Node* insert_back(struct Node** head, int new_data)
+{
+	//Allocate New Node
+	Node* new_node = new Node(new_data);
+
+	//This will be used to traverse to end of the linked list
+	Node* last = *head;
+
+	//Since this will be last node in list, how can at this stage point to a node
+	//ahead of it?
+	new_node->next == nullptr;
+
+	//Traverse to last node in list
+	//How does this work? last initialy equals head (start of list)
+	//We check if the next value isnt equal too null, if true
+	//this would indicate there is another node in list
+	//we then change last node value to the next node in list
+	//repeats until there is no next node , this traverses us to the end.
+	while (last->next != nullptr)
+	{
+		last = last->next;
+
+	}
+
+	//Once traverse to end, we change next of last node.
+	//Previously this would of been nulllptr, however this "last" node
+	//is no longer the last node hence why we make the next equal the new node
+	//Making the new node the "next" node/ last node in list now.
+
+	last->next = new_node;
+	return new_node;
+}
+
 Node* insert_between(struct Node* previous_node, int new_data)
 {
 	//Check if node is nullptr, we cant insert if the node we want to insert with doesnt exist
@@ -78,7 +112,8 @@ int main()
 	Node* node_1 = insert_front(&head, 2);
 	Node* node_2 = insert_front(&head, 3);
 	Node* node_3 = insert_between(node_2, 5);
-
+	Node* node_4 = insert_front(&head, 54);
+	Node* node_5 = insert_back(&head, 534);
 
 }
 
