@@ -28,6 +28,7 @@ Node* insert_front(struct Node** current_head, int new_data)
 
 	//Allocate New Node
 	Node* new_head = new Node(new_data);
+
 	new_head->key = new_data;
 
 	//Make next of new node as head and previous nullptr.
