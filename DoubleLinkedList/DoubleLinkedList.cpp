@@ -2,6 +2,10 @@
 struct Node
 {
 	int data;
+
+	//This will be the number of the node to access it correctly.
+	//Why? 
+	int key;
 	Node* next;
 	Node* previous;
 
@@ -10,6 +14,9 @@ struct Node
 
 	//Default Constructor
 	Node(int d) : data(d), next(nullptr), previous(nullptr)
+	{}
+	//Default Constructor
+	Node(int d , int e) : data(d), key(3), next(nullptr), previous(nullptr)
 	{}
 
 };
@@ -21,6 +28,7 @@ Node* insert_front(struct Node** current_head, int new_data)
 
 	//Allocate New Node
 	Node* new_head = new Node(new_data);
+	new_head->key = new_data;
 
 	//Make next of new node as head and previous nullptr.
 	//Why? New node is will be infront, making this node the new head
@@ -42,6 +50,7 @@ Node* insert_back(struct Node** head, int new_data)
 {
 	//Allocate New Node
 	Node* new_node = new Node(new_data);
+	new_node->key = new_data;
 
 	//This will be used to traverse to end of the linked list
 	Node* last = *head;
@@ -82,6 +91,7 @@ Node* insert_between(struct Node* previous_node, int new_data)
 
 	//Allocate New Node
 	Node* new_node = new Node(new_data);
+	new_node->key = new_data;
 
 	//New node will now be behind previous_nodes next
 	//This places the next pointer now behind new_node
@@ -105,15 +115,84 @@ Node* insert_between(struct Node* previous_node, int new_data)
 	return new_node;
 
 }
+
+//Recursive Approach - Not the most suitable however,
+//easy to follow
+void delete_node(Node*& head, int key)
+{
+	Node* temp_head = head;
+	Node* delete_node = nullptr;
+	
+	//Will be used to store delete node temp and next values, so we can link up the nodes again.
+	//If there is either a null prev or next, no issue! Why? because there was nothing to link to anyway!
+	Node* prev_temp = nullptr;
+	Node* next_temp = nullptr;
+
+	while (temp_head->key != key)
+	{
+		temp_head = temp_head->next;
+	}
+
+	//If true, we discovered what node needs to be deleted.
+	if (temp_head->key == key)
+	{
+		std::cout << key << " node will be deleted\n";
+		if (temp_head->key == head->key)
+		{
+			Node* new_head = temp_head->next;
+			head = new_head;
+		}
+		else
+		{
+		delete_node = temp_head;
+		prev_temp = delete_node->previous;
+
+		if (prev_temp != nullptr)
+		{
+			prev_temp->next = next_temp;
+
+		}
+
+		next_temp = delete_node->next;
+		if (next_temp != nullptr)
+		{
+			next_temp->previous = prev_temp;
+
+		}
+		}
+		
+	}
+
+	free(delete_node);
+	 
+}
+
+//Checks key to see if this node is present within the linked list
+//This function will be usedwithin condition statements else where
+bool search_list(Node* head, int key)
+{
+	Node* current_node = head;
+	while (current_node != nullptr)
+	{
+		if (current_node->key == key)
+		{
+			return true;
+		}
+	}
+	return false;
+}
 //Contains Reference to Linking/Walking through heap
 int main()
 {
-	Node* head = new Node(1);
+	Node* head = new Node(1 , 1);
 	Node* node_1 = insert_front(&head, 2);
 	Node* node_2 = insert_front(&head, 3);
-	Node* node_3 = insert_between(node_2, 5);
-	Node* node_4 = insert_front(&head, 54);
-	Node* node_5 = insert_back(&head, 534);
+	Node* node_3 = insert_front(&head, 4);
+	Node* node_4 = insert_front(&head, 5);
 
+
+	delete_node(head, 5);
+
+	return 0;
 }
 
