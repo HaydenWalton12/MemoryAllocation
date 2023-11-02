@@ -16,7 +16,7 @@ struct Node
 	Node(int d) : data(d), next(nullptr), previous(nullptr)
 	{}
 	//Default Constructor
-	Node(int d , int e) : data(d), key(3), next(nullptr), previous(nullptr)
+	Node(int d , int e) : data(d), key(e), next(nullptr), previous(nullptr)
 	{}
 
 };
@@ -138,6 +138,7 @@ void delete_node(Node*& head, int key)
 	if (temp_head->key == key)
 	{
 		std::cout << key << " node will be deleted\n";
+		//If we are deleting the head node, we need to create a new head, which will be the next node in the list.
 		if (temp_head->key == head->key)
 		{
 			Node* new_head = temp_head->next;
@@ -191,8 +192,8 @@ int main()
 	Node* node_3 = insert_front(&head, 4);
 	Node* node_4 = insert_front(&head, 5);
 
-
-	delete_node(head, 5);
+	Node* node_5 = insert_between(node_3, 6);
+	delete_node(head, 1);
 
 	return 0;
 }
