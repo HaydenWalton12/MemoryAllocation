@@ -257,6 +257,6 @@ int main()
 	Node* num1_node = insert_front(nullptr, 10);
 	Node* num2_node = insert_front(num1_node, 15);
 	Node* num3_node = insert_back(&num2_node, 20);
-	Node* node4_node = insert_between(&num1_node , 25);
+	Node* node4_node = insert_between(num1_node , 25);
 	return 0;
 }
